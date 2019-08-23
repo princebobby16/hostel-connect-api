@@ -2,23 +2,21 @@ package pkg
 
 import (
 	"encoding/json"
+	"gopkg.in/gomail.v2"
 	"log"
 	"net/http"
-	"net/smtp"
 )
 
 const (
-	hostUrl = "smtp.gmail.com"
-	hostPort = "587"
+	hostUrl     = "smtp.gmail.com"
+	hostPort    = 587
 	emailSender = "pbobby001@st.ug.edu.gh"
-	password = "yoforreal.com"
+	password    = "yoforreal.com"
 )
 
-func SendEmail(w http.ResponseWriter, r* http.Request)  {
+func SendEmail(w http.ResponseWriter, r *http.Request) {
 
 	emailReciever := "pbobby001@st.ug.edu.gh"
-
-	emailAuth := smtp.PlainAuth("", emailSender, password, hostUrl)
 
 	req := &Request{}
 
@@ -46,17 +44,15 @@ func SendEmail(w http.ResponseWriter, r* http.Request)  {
 		"/r/n" + "Comment: " + req.Comment +
 		"/r/n" + "School: " + req.School
 
-	msg := []byte("To: " + emailReciever +
-		"/r/n" + "Subject: " + "New Hostel Connect Client Request" +
-		"/r/n" + details)
+	mail := gomail.NewMessage()
+	mail.SetHeader("From", emailSender)
+	mail.SetHeader("To", emailReciever)
+	mail.SetHeader("Subject", "New Hostel Connect Client Request")
+	mail.SetBody("text/plain", details)
 
-	err := smtp.SendMail(
-		hostUrl + ":" + hostPort,
-		emailAuth,
-		emailSender,
-		[]string{emailReciever},
-		msg)
+	dailer := gomail.NewDialer(hostUrl, hostPort, emailSender, password)
 
+	err := dailer.DialAndSend(mail)
 	if err != nil {
 		log.Println(err.Error())
 		return
