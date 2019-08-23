@@ -38,11 +38,11 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	details := "First Name: " + req.FirstName +
-		"/r/n" + "Last Name: " + req.LastName +
-		"/r/n" + "Email: " + req.Email +
-		"/r/n" + "Phone Number: " + req.PhoneNumber +
-		"/r/n" + "Comment: " + req.Comment +
-		"/r/n" + "School: " + req.School
+		" Last Name: " + req.LastName +
+		" Email: " + req.Email +
+		" Phone Number: " + req.PhoneNumber +
+		" Comment: " + req.Comment +
+		" School: " + req.School
 
 	mail := gomail.NewMessage()
 	mail.SetHeader("From", emailSender)
@@ -50,9 +50,9 @@ func SendEmail(w http.ResponseWriter, r *http.Request) {
 	mail.SetHeader("Subject", "New Hostel Connect Client Request")
 	mail.SetBody("text/plain", details)
 
-	dailer := gomail.NewDialer(hostUrl, hostPort, emailSender, password)
+	dialer := gomail.NewDialer(hostUrl, hostPort, emailSender, password)
 
-	err := dailer.DialAndSend(mail)
+	err := dialer.DialAndSend(mail)
 	if err != nil {
 		log.Println(err.Error())
 		return
